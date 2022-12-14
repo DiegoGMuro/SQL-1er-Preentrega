@@ -1,14 +1,6 @@
 CREATE SCHEMA 1er_preentrega;
 USE 1er_preentrega;
 
-CREATE TABLE cliente(
-id_cust INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-day_In DATE,
-name_cust VARCHAR(100) NOT NULL,
-id_Segm INT NOT NULL,
-FOREIGN KEY (id_Segm) REFERENCES segmento(id_segm)
-);
-
 CREATE TABLE segmento(
 id_segm INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 descrip_seg VARCHAR(100) NOT NULL
@@ -34,10 +26,6 @@ id_categ INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 name_cat VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE subcategoria(
-id_subcateg INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-name_subcat VARCHAR(100) NOT NULL
-);
 
 CREATE TABLE vendedor(
 id_salesman INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -48,6 +36,26 @@ lastname_salesman VARCHAR(100) NOT NULL
 CREATE TABLE codigo_postal(
 id_pc INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 name_pc VARCHAR(100) NOT NULL
+);
+
+
+
+
+
+
+CREATE TABLE subcategoria(
+id_subcateg INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+name_subcat VARCHAR(100) NOT NULL,
+id_categ INT NOT NULL,
+FOREIGN KEY (id_categ) REFERENCES categoria(id_categ)
+);
+
+CREATE TABLE cliente(
+id_cust INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+day_In DATE NOT NULL,
+name_cust VARCHAR(100) NOT NULL,
+id_Segm INT NOT NULL,
+FOREIGN KEY (id_Segm) REFERENCES segmento(id_segm)
 );
 
 CREATE TABLE ciudad(
@@ -81,24 +89,12 @@ FOREIGN KEY (id_salesman) REFERENCES vendedor(id_salesman)
 CREATE TABLE productos(
 id_product INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 name_prod VARCHAR(100) NOT NULL,
-id_categ INT NOT NULL,
 id_subcateg INT NOT NULL,
-unit_price DECIMAL,
-sku INT,
-FOREIGN KEY (id_categ) REFERENCES categoria(id_categ),
+unit_price DECIMAL NOT NULL,
+sku INT NOT NULL,
 FOREIGN KEY (id_subcateg) REFERENCES subcategoria(id_subcateg)
 );
 
-CREATE TABLE retornos(
-id_retorno INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-day_return DATE NOT NULL,
-id_order INT NOT NULL,
-id_cause INT NOT NULL,
-id_cust INT NOT NULL,
-FOREIGN KEY (id_order) REFERENCES ordenes(id_order),
-FOREIGN KEY (id_cause) REFERENCES causa_retorno(id_cause),
-FOREIGN KEY (id_cust) REFERENCES cliente(id_cust)
-);
 
 CREATE TABLE ordenes(
 id_order INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -121,6 +117,18 @@ FOREIGN KEY (id_region) REFERENCES region(id_region),
 FOREIGN KEY (id_payment) REFERENCES condicion_pago(id_payment)
 );
 
+CREATE TABLE retornos(
+id_retorno INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+day_return DATE NOT NULL,
+id_order INT NOT NULL,
+id_cause INT NOT NULL,
+id_cust INT NOT NULL,
+FOREIGN KEY (id_order) REFERENCES ordenes(id_order),
+FOREIGN KEY (id_cause) REFERENCES causa_retorno(id_cause),
+FOREIGN KEY (id_cust) REFERENCES cliente(id_cust)
+);
+
+
 CREATE TABLE ordenes_productos(
 Id_vta_order_prod INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 id_order INT NOT NULL,
@@ -129,5 +137,3 @@ qty INT NOT NULL,
 FOREIGN KEY (id_order) REFERENCES ordenes(id_order),
 FOREIGN KEY (id_product) REFERENCES productos(id_product)
 );
-
-
